@@ -1,0 +1,32 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <AssemblyName>CP2FastMode</AssemblyName>
+    <LangVersion>latest</LangVersion>
+    <Nullable>disable</Nullable>
+    <!-- Game root; override with: dotnet build -p:GameDir="D:\path\to\game" -->
+    <GameDir Condition="'$(GameDir)' == ''">C:\Program Files (x86)\Steam\steamapps\common\Chicken Police Into the Hive!\</GameDir>
+    <GameRoot>$([MSBuild]::EnsureTrailingSlash('$(GameDir)'))</GameRoot>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Reference Include="$(GameRoot)BepInEx\core\BepInEx.Core.dll" Private="false" />
+    <Reference Include="$(GameRoot)BepInEx\core\BepInEx.Unity.IL2CPP.dll" Private="false" />
+    <Reference Include="$(GameRoot)BepInEx\core\Il2CppInterop.Runtime.dll" Private="false" />
+    <Reference Include="$(GameRoot)BepInEx\core\0Harmony.dll" Private="false" />
+    <Reference Include="$(GameRoot)BepInEx\interop\Il2Cppmscorlib.dll" Private="false" />
+    <Reference Include="$(GameRoot)BepInEx\interop\UnityEngine.CoreModule.dll" Private="false" />
+    <Reference Include="$(GameRoot)BepInEx\interop\Unity.InputSystem.dll" Private="false" />
+    <Reference Include="$(GameRoot)BepInEx\interop\TWG.Shared.dll" Private="false" />
+    <Reference Include="$(GameRoot)BepInEx\interop\TWG.Shared.Adventure.dll" Private="false" />
+    <Reference Include="$(GameRoot)BepInEx\interop\Il2CppSystem.dll" Private="false" Condition="Exists('$(GameRoot)BepInEx\interop\Il2CppSystem.dll')" />
+    <Reference Include="$(GameRoot)BepInEx\core\Il2CppInterop.Common.dll" Private="false" />
+  </ItemGroup>
+
+  <!-- Copy the built plugin into the game's plugins folder (only with -p:Install=true) -->
+  <Target Name="CopyToPlugins" AfterTargets="Build" Condition="'$(Install)' == 'true'">
+    <Copy SourceFiles="$(TargetPath)" DestinationFolder="$(GameRoot)BepInEx\plugins" />
+  </Target>
+
+</Project>
